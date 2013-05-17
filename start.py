@@ -37,7 +37,7 @@ def getDataFromExcel(filename):
 
     f.close()
     """
-    
+
     c = canvas.Canvas("barcodes.pdf")
 
     old_stdout = sys.stdout 
@@ -77,14 +77,15 @@ def getDataFromExcel(filename):
             print ""
 
             if check :
-                createBarCodes("1234567890", ID, first_name, last_name, faculty)
-                check = False
+                createBarCodes("1234567890", c, ID, first_name, last_name, faculty)
+                # check = False
         else :
             curr_row += 1
 
     # createBarCodes(barcode_value, ID, first_name, last_name, faculty):
     # createBarCodes("1234567890", ID, first_name, last_name, faculty)
 
+    c.save()
     sys.stdout = old_stdout
 
 if __name__ == "__main__":

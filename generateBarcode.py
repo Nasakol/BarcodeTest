@@ -14,11 +14,11 @@ from reportlab.pdfbase import pdfmetrics, ttfonts
 pdfmetrics.registerFont(ttfonts.TTFont('Tahoma', 'c:\\Windows\\Fonts\\Tahoma.TTF'))
  
 #----------------------------------------------------------------------
-def createBarCodes(barcode_value, ID, first_name, last_name, new_faculty):
+def createBarCodes(barcode_value, c, ID, first_name, last_name, faculty):
     """
-    Create barcode examples and embed in a PDF
+    Create barcode from Excel and embed in a PDF
     """
-    c = canvas.Canvas("barcodes.pdf", pagesize=A4)
+    # c = canvas.Canvas("barcodes.pdf", pagesize=A4)
     c.setFont("Tahoma", 9) 
     # barcode39 = code39.Extended39(barcode_value)
  
@@ -28,7 +28,6 @@ def createBarCodes(barcode_value, ID, first_name, last_name, new_faculty):
     width = bounds[2] - bounds[0]
     height = bounds[3] - bounds[1]
 
-    barcode_eanbc132 = eanbc.Ean13BarcodeWidget("99999999")
 
     # d = Drawing(1000, 1000)
     # d.add(barcode_eanbc13)
@@ -36,39 +35,45 @@ def createBarCodes(barcode_value, ID, first_name, last_name, new_faculty):
     # renderPDF.draw(d, c, 0.5*inch, 0.5*inch)
 
     # faculty = u'วิศวกรรมศาสตร์'.encode('utf-8')
-    c.drawString(3.7*inch, 11*inch, faculty)
     pos_y = 0
     index_y = 0
-    c.translate(0.4*inch, 9.7*inch)
     max_number_in_a_row = 5
-    while index_y < len(ID)//max_number_in_a_row :
-        pos_x = index_x = 0
-        while index_x < max_number_in_a_row :
-            barcode_eanbc13 = eanbc.Ean13BarcodeWidget( ID[index_y*5 + index_x] )
-            d = Drawing()
-            d.add(barcode_eanbc13)
-            renderPDF.draw(d, c, (pos_x)*inch, -(pos_y)*inch)
-            c.drawString((pos_x+0.1)*inch, -(pos_y+0.2)*inch, u'ณสกล พงศ์กอปรสกล'.encode('utf-8')) # len my name is 46 (space is 1 length)
-            pos_x += 1.55
-            index_x += 1
-        pos_y += 1.5
-        index_y += 1
-
-    index = index_y*5
-    pos_x = 0
+    index = 0
     while index < len(ID) :
-        barcode_eanbc13 = eanbc.Ean13BarcodeWidget( ID[index] )
-        d = Drawing()
-        d.add(barcode_eanbc13)
-        renderPDF.draw(d, c, (pos_x)*inch, -(pos_y)*inch)
-        c.drawString((pos_x+0.1)*inch, -(pos_y+ 0.2)*inch, u'ณสกล พงศ์กอปรสกล'.encode('utf-8')) # len my name is 46 (space is 1 length)
-        pos_x += 1.55
-        index += 1
+        c.setFont("Tahoma", 11) 
+        c.translate(0.4*inch, 9.7*inch)
+        c.drawString(3.3*inch, 1.3*inch, faculty)
+        c.setFontSize(9)
 
+        index_y = pos_y = 0
+        while index_y < 7 and index < len(ID):
+            pos_x = index_x = 0
+            while index_x < max_number_in_a_row and index < len(ID):
+                # index = index_y*5 + index_x
 
+                # generate Barcode
+                barcode_eanbc13 = eanbc.Ean13BarcodeWidget( ID[index] )
+                d = Drawing()
+                d.add(barcode_eanbc13)
 
-    c.showPage()
-    c.save()
+                #draw
+                renderPDF.draw(d, c, (pos_x)*inch, -(pos_y)*inch)
+                c.drawString((pos_x+0.1)*inch, -(pos_y+0.15)*inch, first_name[index] + " " + last_name[index]) # len my name is 46 (space is 1 length)
+                
+                #update
+                pos_x += 1.55
+                index_x += 1
+                index += 1
+            #update
+            pos_y += 1.5
+            index_y += 1
+            # index += 1
+        c.showPage()
+
+    # c.showPage()
+    # c.save()
  
 if __name__ == "__main__":
-    createBarCodes("1234567890")
+    c = canvas.Canvas("barcodes.pdf")
+    createBarCodes("1234567890", c, [], [], [], "")
+    c.save()
