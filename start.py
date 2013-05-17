@@ -43,7 +43,7 @@ def getDataFromExcel(filename):
     old_stdout = sys.stdout 
     sys.stdout = open(filename, 'w')
 
-    workbook = xlrd.open_workbook('xlrdTest.xls')#, encoding_override = "UTF-8")
+    workbook = xlrd.open_workbook('DataStudent.xls')#, encoding_override = "UTF-8")
     worksheet = workbook.sheet_by_name('Sheet2')
     num_rows = worksheet.nrows
     num_cells = worksheet.ncols
