@@ -20,35 +20,30 @@ def createBarCodes(barcode_value, c, ID, first_name, last_name, faculty):
     """
     # c = canvas.Canvas("barcodes.pdf", pagesize=A4)
     c.setFont("Tahoma", 9) 
-    # barcode39 = code39.Extended39(barcode_value)
  
-    # # draw the eanbc13 code
-    barcode_eanbc13 = eanbc.Ean13BarcodeWidget(barcode_value)
-    bounds = barcode_eanbc13.getBounds()
-    width = bounds[2] - bounds[0]
-    height = bounds[3] - bounds[1]
+    # draw the eanbc13 code
+    # barcode_eanbc13 = eanbc.Ean13BarcodeWidget(barcode_value)
+    # bounds = barcode_eanbc13.getBounds()
+    # width = bounds[2] - bounds[0]
+    # height = bounds[3] - bounds[1]
 
 
-    # d = Drawing(1000, 1000)
-    # d.add(barcode_eanbc13)
-    # d.add(barcode_eanbc132)
-    # renderPDF.draw(d, c, 0.5*inch, 0.5*inch)
+    max_column = 5
+    max_row = 7
 
-    # faculty = u'วิศวกรรมศาสตร์'.encode('utf-8')
-    pos_y = 0
-    index_y = 0
-    max_number_in_a_row = 5
     index = 0
     while index < len(ID) :
+        # set default 
         c.setFont("Tahoma", 11) 
         c.translate(0.4*inch, 9.7*inch)
-        c.drawString(3.3*inch, 1.3*inch, faculty)
+        c.drawString(3.3*inch, 1.3*inch, faculty)   # print Faculty at the top of page 
         c.setFontSize(9)
 
         index_y = pos_y = 0
-        while index_y < 7 and index < len(ID):
+        # one page
+        while index_y < max_row :
             pos_x = index_x = 0
-            while index_x < max_number_in_a_row and index < len(ID):
+            while index_x < max_column and index < len(ID):
                 # index = index_y*5 + index_x
 
                 # generate Barcode
@@ -67,7 +62,6 @@ def createBarCodes(barcode_value, c, ID, first_name, last_name, faculty):
             #update
             pos_y += 1.5
             index_y += 1
-            # index += 1
         c.showPage()
 
     # c.showPage()
